@@ -9,22 +9,19 @@ function! dedit#edit(fpath)
   let dst_file = $TMPDIR . fname
 
   let resp = system(dedit#make_dcp_cmd(a:fpath, dst_file)) " todo: handle error
-  if resp != ""
+  if !empty(resp)
     echo resp
     return
   endif
   execute ":e " . dst_file
 
   call dedit#upload_when_save(a:fpath, dst_file)
-  return
 endfunction
 
 function! dedit#upload_when_save(fpath, bufname)
   let cmd = dedit#make_dcp_cmd(a:bufname, a:fpath)
   let aucmd = dedit#make_upload_when_save_autocmd(a:bufname, cmd)
   execute(aucmd)
-
-  return
 endfunction
 
 function! dedit#make_dcp_cmd(src, dst)
